@@ -9,8 +9,6 @@ namespace RandomHeightTest
 {
     internal class HeightTest
     {
-
-
         readonly int[] observed;
         int[] limits;
         double[] probs;
