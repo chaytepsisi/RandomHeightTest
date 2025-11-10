@@ -11,7 +11,8 @@ namespace RandomHeightTest
     internal class Program
     {
         static readonly Random random = new Random();
-
+        static readonly bool SHOW_INFO=true;
+        static readonly bool NO_INFO = false;
         static string GenerateRandomString(int length)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -45,26 +46,57 @@ namespace RandomHeightTest
 
         static void Main(string[] args)
         {
-            string str;
             int sequenceLength = 128;
             int numberOfTrials = 100000;
-            int negative = 0;
+            TestRandomSequence(sequenceLength, numberOfTrials);
+            TestBiasedSequence(sequenceLength, numberOfTrials,0.01);
+            GetBiasedMissRate(sequenceLength, numberOfTrials, 0.001);
+        }
+        static void TestRandomSequence(int sequenceLength, int numberOfTrials)
+        {
+            string str;
+            HeightTest heightTest = new HeightTest(sequenceLength);
+
+            for (int j = 0; j < numberOfTrials; j++)
+            {
+                str = GenerateRandomString(sequenceLength);
+                heightTest.Test(str);
+            }
+
+            Console.WriteLine("P-Value: " + heightTest.Evaluate(SHOW_INFO));
+        }
+        static void TestBiasedSequence(int sequenceLength, int numberOfTrials, double bias)
+        {
+            string str;
+            HeightTest heightTest = new HeightTest(sequenceLength);
+
+            for (int j = 0; j < numberOfTrials; j++)
+            {
+                str = GenerateBiasedString(sequenceLength, bias);
+                heightTest.Test(str);
+            }
+            Console.WriteLine("P-Value: " + heightTest.Evaluate(SHOW_INFO));
+        }
+        static void GetBiasedMissRate(int sequenceLength, int numberOfTrials, double bias)
+        {
+            string str;
+            int miss = 0;
+
             for (int i = 0; i < 100; i++)
             {
                 HeightTest heightTest = new HeightTest(sequenceLength);
 
                 for (int j = 0; j < numberOfTrials; j++)
                 {
-                    //str = GenerateRandomString(sequenceLength);
-                    str = GenerateBiasedString(sequenceLength, 0.001);
+                    str = GenerateBiasedString(sequenceLength, bias);
                     heightTest.Test(str);
                 }
-                if(heightTest.Evaluate(false)>=0.01)
-                    negative++;
-                //Console.WriteLine("P-Value: " + heightTest.Evaluate(false));
+                if (heightTest.Evaluate(NO_INFO) >= 0.01)
+                    miss++;
             }
 
-            Console.WriteLine(negative);
+            Console.WriteLine("Bias: " + bias);
+            Console.WriteLine("Misses: " + miss + "/" + 100);
         }
     }
 }
