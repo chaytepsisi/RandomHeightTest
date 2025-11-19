@@ -148,7 +148,7 @@ namespace RandomHeightTest
             Console.WriteLine("Sequence Length: " + SequenceLength);
             Console.WriteLine("Number of Samples: " + numberOfSamples);
             Console.WriteLine("- - - - - - - - - - - - - - - - -");
-            Console.WriteLine("       Expctd    Obsrvd");
+            Console.WriteLine("       Obsrvd    Expctd");
             for (int i = 0; i < observed.Length; i++)
                 Console.WriteLine("Bin-" + (i + 1) + ": " + observed[i] + "\t" + probs[i] * numberOfSamples);
 
