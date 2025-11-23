@@ -171,7 +171,7 @@ namespace RandomHeightTest
         /// <param name="sequenceLength"> Length of each tested sequence</param>
         /// <param name="numberOfTrials"> Number of tested sequences</param>
         /// <param name="generator"> SHA2-256 or SHA2-512</param>
-        public static Result TestSha2(int sequenceLength, int numberOfTrials, int generator, BackgroundWorker bgw = null)
+        public static Result TestHash(int sequenceLength, int numberOfTrials, int generator, BackgroundWorker bgw = null)
         {
             byte[] initialBytes = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 

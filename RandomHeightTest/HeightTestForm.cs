@@ -93,13 +93,16 @@ namespace RandomHeightTest
             switch (selectedGenerator)
             {
                 case Testing.GENERATOR_AES:
-                    pValue = Testing.TestAES128(sequenceLength, numberOfSequences, selectedGenerator, testBgw);
+                    pValue = Testing.TestAES128(sequenceLength, numberOfSequences, Testing.GENERATOR_AES, testBgw);
                     break;
                 case Testing.GENERATOR_SHA256:
-                    pValue = Testing.TestSha2(sequenceLength, numberOfSequences, selectedGenerator, testBgw);
+                    pValue = Testing.TestHash(sequenceLength, numberOfSequences, Testing.GENERATOR_SHA256, testBgw);
                     break;
                 case Testing.GENERATOR_SHA512:
-                    pValue = Testing.TestSha2(sequenceLength, numberOfSequences, selectedGenerator, testBgw);
+                    pValue = Testing.TestHash(sequenceLength, numberOfSequences, Testing.GENERATOR_SHA512, testBgw);
+                    break;
+                case Testing.GENERATOR_MD5:
+                    pValue = Testing.TestHash(sequenceLength, numberOfSequences, Testing.GENERATOR_MD5, testBgw);
                     break;
                 case Testing.FILE_TESTER:
                     if (isBinaryFile)
