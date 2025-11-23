@@ -54,34 +54,8 @@ namespace RandomHeightTest
             }
             return stringBuilder.ToString();
         }
-
-        public static string GenerateSpecialBiasedSequence(int length, int numberOfSequences, int fixedLength)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            string prefix = "";
-            string suffix = "";
-            for (int i = 0; i < fixedLength; i++)
-            {
-                prefix += "1";
-                suffix += "0";
-            }
-            for (int j = 0; j < numberOfSequences; j++)
-            {
-                stringBuilder.Append(prefix);
-                for (int i = prefix.Length; i < length - suffix.Length; i++)
-                {
-                    if (random.Next(2) == 0)
-                        stringBuilder.Append("1");
-                    else stringBuilder.Append("0");
-                }
-                stringBuilder.Append(suffix);
-            }
-            return stringBuilder.ToString();
-        }
-
         public static void GenerateSpecialBiasedSequence(int length, int numberOfSequences, int fixedLength, string fileName)
         {
-            StringBuilder stringBuilder = new StringBuilder();
             string prefix = "";
             string suffix = "";
             StreamWriter writer = new StreamWriter(fileName);

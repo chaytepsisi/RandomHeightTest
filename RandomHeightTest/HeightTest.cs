@@ -14,6 +14,7 @@ namespace RandomHeightTest
         double[] probs;
         int numberOfSamples;
         public int SequenceLength { get; set; }
+        public string ResultString { get; set; }
 
         public HeightTest(int sequenceLength)
         {
@@ -145,17 +146,30 @@ namespace RandomHeightTest
 
         void PrintObservedValues(double chi2Value)
         {
-            Console.WriteLine("Sequence Length: " + SequenceLength);
-            Console.WriteLine("Number of Samples: " + numberOfSamples);
-            Console.WriteLine("- - - - - - - - - - - - - - - - -");
-            Console.WriteLine("       Obsrvd    Expctd");
+            //Console.WriteLine("Sequence Length: " + SequenceLength);
+            //Console.WriteLine("Number of Samples: " + numberOfSamples);
+            //Console.WriteLine("- - - - - - - - - - - - - - - - -");
+            //Console.WriteLine("       Obsrvd    Expctd");
+            //for (int i = 0; i < observed.Length; i++)
+            //    Console.WriteLine("Bin-" + (i + 1) + ": " + observed[i] + "\t" + probs[i] * numberOfSamples);
+
+            //Console.WriteLine();
+
+            //Console.WriteLine("Degree Of Freedom: " + (probs.Length - 1));
+            //Console.WriteLine("X2 Value: " + chi2Value);
+
+
+            ResultString = "Sequence Length: " + SequenceLength+"\n";
+            ResultString += "Number of Samples: " + numberOfSamples + "\n";
+            ResultString += "- - - - - - - - - - - - - - - - -" + "\n";
+            ResultString += "          Obsrvd    Expctd\n";
             for (int i = 0; i < observed.Length; i++)
-                Console.WriteLine("Bin-" + (i + 1) + ": " + observed[i] + "\t" + probs[i] * numberOfSamples);
+                ResultString += "Bin-" + (i + 1) + ": " + observed[i] + "\t" + probs[i] * numberOfSamples + "\n";
 
-            Console.WriteLine();
+            ResultString += "\n";
 
-            Console.WriteLine("Degree Of Freedom: " + (probs.Length - 1));
-            Console.WriteLine("X2 Value: " + chi2Value);
+            ResultString += "Degree Of Freedom: " + (probs.Length - 1) + "\n";
+            ResultString += "X2 Value: " + chi2Value + "\n";
         }
     }
 }

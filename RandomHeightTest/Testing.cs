@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 
 namespace RandomHeightTest
 {
@@ -14,9 +16,11 @@ namespace RandomHeightTest
         static readonly bool NO_INFO = false;
         static readonly int BYTE_LENGTH = 8;
 
-        static readonly int GENERATOR_SHA256 = 0;
-        static readonly int GENERATOR_SHA512 = 1;
-        static readonly int GENERATOR_AES = 2;
+        public const int GENERATOR_AES = 1;
+        public const int GENERATOR_SHA256 = 2;
+        public const int GENERATOR_SHA512 = 3;
+        public const int GENERATOR_MD5 = 4;
+        public const int FILE_TESTER = 5;
 
         /// <summary>
         /// Tests an ASCII file of 1s and 0s containing concatenated sequences of given length
@@ -24,19 +28,7 @@ namespace RandomHeightTest
         /// <param name="sequenceLength"></param>
         /// <param name="numberOfTrials"></param>
         /// <param name="filePath"></param>
-        public static void TestFile(int sequenceLength, int numberOfTrials, string filePath)
-        {
-            HeightTest heightTest = new HeightTest(sequenceLength);
-            var allText = File.ReadAllText(filePath);
-            for (int j = 0; j < numberOfTrials; j++)
-            {
-                heightTest.Test(allText.Substring(j * sequenceLength, sequenceLength));
-            }
-
-            Console.WriteLine("P-Value: " + heightTest.Evaluate(SHOW_INFO));
-        }
-
-        public static void TestFile2(int sequenceLength, int numberOfTrials, string filePath)
+        public static Result TestFile(int sequenceLength, int numberOfTrials, string filePath, BackgroundWorker bgw = null)
         {
             StreamReader reader = new StreamReader(filePath);
             HeightTest heightTest = new HeightTest(sequenceLength);
@@ -47,16 +39,21 @@ namespace RandomHeightTest
                 buffer = new char[sequenceLength];
                 reader.ReadBlock(buffer, 0, sequenceLength);
                 sequence = new string(buffer);
-
-                //sequence = "";
-                //for (int i = 0; i < sequenceLength; i++)
-                //{
-                    //sequence+=reader.Read();
-                //}
                 heightTest.Test(sequence);
-            }
 
-            Console.WriteLine("P-Value: " + heightTest.Evaluate(SHOW_INFO));
+                if (bgw != null && j % (numberOfTrials / 100) == 0)
+                {
+                    bgw.ReportProgress((int)(j / (numberOfTrials / 100.0)));
+                }
+            }
+            var pVal = heightTest.Evaluate(SHOW_INFO);
+
+            Console.WriteLine("P-Value: " + pVal);
+            return new Result()
+            {
+                PValue = pVal,
+                Text = heightTest.ResultString
+            };
         }
 
         /// <summary>
@@ -137,7 +134,7 @@ namespace RandomHeightTest
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="sequenceLength"></param>
-        public static void ReadFromBinaryFile(string filePath, int sequenceLength)
+        public static Result ReadFromBinaryFile(string filePath, int sequenceLength)
         {
             var allBytes = System.IO.File.ReadAllBytes(filePath);
             var sequenceBytes = sequenceLength / BYTE_LENGTH;
@@ -156,7 +153,13 @@ namespace RandomHeightTest
                 }
                 heightTest.Test(str.ToString());
             }
-            Console.WriteLine("P-Value: " + heightTest.Evaluate(SHOW_INFO));
+            var pVal = heightTest.Evaluate(SHOW_INFO);
+            Console.WriteLine("P-Value: " + heightTest.ResultString);
+            return new Result()
+            {
+                PValue = pVal,
+                Text = heightTest.ResultString
+            };
         }
         /// <summary>
         /// Generates numberOfTrials sequence of length "sequenceLength" from SHA2-256 or SHA2-512 
@@ -168,7 +171,7 @@ namespace RandomHeightTest
         /// <param name="sequenceLength"> Length of each tested sequence</param>
         /// <param name="numberOfTrials"> Number of tested sequences</param>
         /// <param name="generator"> SHA2-256 or SHA2-512</param>
-        public static void TestSha2(int sequenceLength, int numberOfTrials, int generator)
+        public static Result TestSha2(int sequenceLength, int numberOfTrials, int generator, BackgroundWorker bgw = null)
         {
             byte[] initialBytes = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
@@ -181,10 +184,22 @@ namespace RandomHeightTest
                     str = hashData.GenerateSHA512Data(sequenceLength);
                 else if (generator == GENERATOR_SHA256)
                     str = hashData.GenerateSHA256Data(sequenceLength);
-                heightTest.Test(str);
-            }
+                else if (generator == GENERATOR_MD5)
+                    str = hashData.GenerateMD5Data(sequenceLength);
 
-            Console.WriteLine("P-Value: " + heightTest.Evaluate(SHOW_INFO));
+                heightTest.Test(str);
+                if (bgw != null && j % (numberOfTrials / 100) == 0)
+                {
+                    bgw.ReportProgress((int)(j / (numberOfTrials / 100.0)));
+                }
+            }
+            var pVal = heightTest.Evaluate(SHOW_INFO);
+            Console.WriteLine("P-Value: " + heightTest.ResultString);
+            return new Result()
+            {
+                PValue = pVal,
+                Text = heightTest.ResultString
+            };
         }
 
         /// <summary>
@@ -193,20 +208,17 @@ namespace RandomHeightTest
         /// <param name="sequenceLength"> Length of each tested sequence</param>
         /// <param name="numberOfTrials"> Number of tested sequences</param>
         /// <param name="generator"> AES-128</param>
-        public static void TestAES128(int sequenceLength, int numberOfTrials, int generator)
+        public static Result TestAES128(int sequenceLength, int numberOfTrials, int generator, BackgroundWorker bgw = null)
         {
-            HeightTest heightTest = new HeightTest(sequenceLength);
             EncryptedData encData = new EncryptedData();
-            string str = "";
-            for (int j = 0; j < numberOfTrials; j++)
+            string fileName = "aes_" + sequenceLength + ".txt";
+            if (generator == GENERATOR_AES)
             {
-                if (generator == GENERATOR_AES)
-                    str = encData.GenerateAESData(j, sequenceLength);
-
-                heightTest.Test(str);
+                encData.GenerateAESDataFile(sequenceLength, numberOfTrials, fileName, 0, bgw);
             }
-
-            Console.WriteLine("P-Value: " + heightTest.Evaluate(SHOW_INFO));
+            var result = TestFile(sequenceLength, numberOfTrials, fileName, bgw);
+            Console.WriteLine("P-Value: " + result.PValue.ToString());
+            return result;
         }
     }
 }

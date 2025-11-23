@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 
 namespace RandomHeightTest
 {
@@ -13,8 +15,8 @@ namespace RandomHeightTest
         const int AES_BITLENGTH = 128;
 
         byte[] Ptext;
-        byte[] Key;
-        byte[] IV;
+        readonly byte[] Key;
+        readonly byte[] IV;
 
         public EncryptedData()
         {
@@ -26,7 +28,6 @@ namespace RandomHeightTest
             Key = keyData;
             IV = iv;
         }
-
         public string GenerateAESData(long counter, int sequenceLength)
         {
             var tempPtext = BitConverter.GetBytes(counter);
@@ -46,21 +47,38 @@ namespace RandomHeightTest
             }
             return stringBuilder.ToString().Substring(0, sequenceLength);
         }
-
-        string GenerateAESData(byte[] bytes, int sequenceLength)
+        public void GenerateAESDataFile(int sequenceLength, int numberOfSequences, string filePath, long counter=0, BackgroundWorker bgw=null)
         {
-            Ptext = bytes;
-            int numberOfEncryptions = sequenceLength / AES_BITLENGTH + 1;
+            int numberOfEncryptions = (sequenceLength + AES_BITLENGTH - 1) / AES_BITLENGTH;
+            StreamWriter writer = new StreamWriter(filePath);
 
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < numberOfEncryptions; i++)
+            byte[] tempPtext;
+
+            for (int j = 0; j < numberOfSequences; j++)
             {
-                AES_Encrypt();
-                stringBuilder.Append(ConvertByteToBinaryString(Ptext));
-            }
-            return stringBuilder.ToString().Substring(0, sequenceLength);
-        }
+                tempPtext = BitConverter.GetBytes(counter + j);
+                Ptext = new byte[16];
 
+                for (int i = 0; i < tempPtext.Length; i++)
+                {
+                    Ptext[i] = tempPtext[i];
+                }
+
+                for (int i = 0; i < numberOfEncryptions; i++)
+                {
+                    AES_Encrypt();
+                    writer.Write(ConvertByteToBinaryString(Ptext));
+                }
+                if (bgw != null && j % (numberOfSequences / 100) == 0)
+                {
+                    bgw.ReportProgress((int)(j / (numberOfSequences / 100.0)));
+                    writer.Flush();
+                }
+            }
+
+            writer.Flush();
+            writer.Close();
+        }
         void AES_Encrypt()
         {
             using (Aes aes = Aes.Create())

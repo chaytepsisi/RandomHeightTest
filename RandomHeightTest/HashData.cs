@@ -11,6 +11,8 @@ namespace RandomHeightTest
     {
         const int SHA512_BITLENGTH = 512;
         const int SHA256_BITLENGTH = 256;
+        const int MD5_BITLENGTH = 128;
+
         byte[] Data;
 
         public HashData(byte[] hashData)
@@ -50,7 +52,22 @@ namespace RandomHeightTest
             return stringBuilder.ToString().Substring(0, sequenceLength);
         }
 
+        public string GenerateMD5Data(int sequenceLength)
+        {
+            int numberOfHashComputations = sequenceLength / MD5_BITLENGTH + 1;
 
+            StringBuilder stringBuilder = new StringBuilder();
+            using (MD5 md5 = MD5.Create())
+            {
+                for (int i = 0; i < numberOfHashComputations; i++)
+                {
+                    Data = md5.ComputeHash(Data);
+                    stringBuilder.Append(ConvertByteToBinaryString(Data));
+                }
+            }
+            return stringBuilder.ToString().Substring(0, sequenceLength);
+        }
+        
         string ConvertByteToBinaryString(byte[] value)
         {
             StringBuilder sb = new StringBuilder();
