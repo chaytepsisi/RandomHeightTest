@@ -146,19 +146,6 @@ namespace RandomHeightTest
 
         void PrintObservedValues(double chi2Value)
         {
-            //Console.WriteLine("Sequence Length: " + SequenceLength);
-            //Console.WriteLine("Number of Samples: " + numberOfSamples);
-            //Console.WriteLine("- - - - - - - - - - - - - - - - -");
-            //Console.WriteLine("       Obsrvd    Expctd");
-            //for (int i = 0; i < observed.Length; i++)
-            //    Console.WriteLine("Bin-" + (i + 1) + ": " + observed[i] + "\t" + probs[i] * numberOfSamples);
-
-            //Console.WriteLine();
-
-            //Console.WriteLine("Degree Of Freedom: " + (probs.Length - 1));
-            //Console.WriteLine("X2 Value: " + chi2Value);
-
-
             ResultString = "Sequence Length: " + SequenceLength+"\n";
             ResultString += "Number of Samples: " + numberOfSamples + "\n";
             ResultString += "- - - - - - - - - - - - - - - - -" + "\n";

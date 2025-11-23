@@ -69,12 +69,10 @@ namespace RandomHeightTest
         {
             if (GeneratorsCbx.SelectedIndex == generators.Length - 1)
             {
-                //FilePathTbx.Enabled = true;
                 SelectFileButton.Enabled = true;
             }
             else
             {
-                //FilePathTbx.Enabled = false;
                 filePath = "";
                 SelectFileButton.Enabled = false;
             }
@@ -86,7 +84,6 @@ namespace RandomHeightTest
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     filePath = openFileDialog.FileName;
-                    //FilePathTbx.Text = filePath;
                     ResultTbx.Text = filePath;
                 }
             }
