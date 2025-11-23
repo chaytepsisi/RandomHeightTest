@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -53,26 +54,33 @@ namespace RandomHeightTest
             StreamWriter writer = new StreamWriter(filePath);
 
             byte[] tempPtext;
-
-            for (int j = 0; j < numberOfSequences; j++)
+            using (Aes aes = Aes.Create())
             {
-                tempPtext = BitConverter.GetBytes(counter + j);
-                Ptext = new byte[16];
+                aes.KeySize = 128;
+                aes.Key = Key;
+                aes.IV = IV;
+                aes.Mode = CipherMode.ECB;
+                aes.Padding = PaddingMode.Zeros;
+                for (int j = 0; j < numberOfSequences; j++)
+                {
+                    tempPtext = BitConverter.GetBytes(counter + j);
+                    Ptext = new byte[16];
 
-                for (int i = 0; i < tempPtext.Length; i++)
-                {
-                    Ptext[i] = tempPtext[i];
-                }
+                    for (int i = 0; i < tempPtext.Length; i++)
+                    {
+                        Ptext[i] = tempPtext[i];
+                    }
 
-                for (int i = 0; i < numberOfEncryptions; i++)
-                {
-                    AES_Encrypt();
-                    writer.Write(ConvertByteToBinaryString(Ptext));
-                }
-                if (bgw != null && j % (numberOfSequences / 100) == 0)
-                {
-                    bgw.ReportProgress((int)(j / (numberOfSequences / 100.0)));
-                    writer.Flush();
+                    for (int i = 0; i < numberOfEncryptions; i++)
+                    {
+                        AES_Encrypt2(aes);
+                        writer.Write(ConvertByteToBinaryString(Ptext));
+                    }
+                    if (bgw != null && j % (numberOfSequences / 100) == 0)
+                    {
+                        bgw.ReportProgress((int)(j / (numberOfSequences / 100.0)));
+                        writer.Flush();
+                    }
                 }
             }
 
@@ -100,6 +108,20 @@ namespace RandomHeightTest
                     }
                     Ptext = ms.ToArray();
                 }
+            }
+        }
+
+        void AES_Encrypt2(Aes aes)
+        {
+            ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (CryptoStream cryptoStream = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                {
+                    cryptoStream.Write(Ptext, 0, Ptext.Length);
+                    cryptoStream.FlushFinalBlock();
+                }
+                Ptext = ms.ToArray();
             }
         }
         string ConvertByteToBinaryString(byte[] value)
