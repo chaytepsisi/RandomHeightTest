@@ -15,20 +15,21 @@ namespace RandomHeightTest
     {
         readonly string[] generators = new string[] { "Select", "AES-128", "SHA2-256", "SHA2-512","MD5", "File" };
         readonly string[] bitLengths= new string[] { "Select", "128", "256", "1024", "4096" };
+        readonly string[] filetypes= new string[] { "Select", "ASCII", "Binary", "Hex" };
         Result pValue;
 
         int selectedGenerator = -1;
         int sequenceLength = 128;
         int numberOfSequences = 1000000;
         string filePath = string.Empty;
-        readonly bool isBinaryFile = false;
         readonly Stopwatch stopwatch = new Stopwatch();
-
+        int fileType = 0;
         public HeightTestForm()
         {
             InitializeComponent();
             GeneratorsCbx.DataSource = generators;
             SequenceLengthCbx.DataSource = bitLengths;
+            FileTypeCbox.DataSource = filetypes;    
         }
         private void TestButton_Click(object sender, EventArgs e)
         {
@@ -48,6 +49,11 @@ namespace RandomHeightTest
                     MessageBox.Show("Please select a valid file path.");
                     return;
                 }
+                if (fileType == 0)
+                {
+                    MessageBox.Show("Please select file type.");
+                    return;
+                }
             }
             try
             {
@@ -63,18 +69,21 @@ namespace RandomHeightTest
             ResultTbx.Clear();
             stopwatch.Restart();
             testBgw.RunWorkerAsync();
-            TestButton.Enabled = false;
+            //TestButton.Enabled = false;
+            panel1.Enabled = false;
         }
         private void GeneratorsCbx_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (GeneratorsCbx.SelectedIndex == generators.Length - 1)
             {
                 SelectFileButton.Enabled = true;
+                FileTypeCbox.Enabled = true;
             }
             else
             {
                 filePath = "";
                 SelectFileButton.Enabled = false;
+                FileTypeCbox.Enabled = false;
             }
         }
         private void SelectFileButton_Click(object sender, EventArgs e)
@@ -85,6 +94,7 @@ namespace RandomHeightTest
                 {
                     filePath = openFileDialog.FileName;
                     ResultTbx.Text = filePath;
+                    FileTypeCbox.Enabled = true;
                 }
             }
         }
@@ -105,10 +115,20 @@ namespace RandomHeightTest
                     pValue = Testing.TestHash(sequenceLength, numberOfSequences, Testing.GENERATOR_MD5, testBgw);
                     break;
                 case Testing.FILE_TESTER:
-                    if (isBinaryFile)
-                        pValue = Testing.ReadFromBinaryFile(filePath, sequenceLength);
-                    else
-                        pValue = Testing.TestFile(sequenceLength, numberOfSequences, filePath);
+                    switch (fileType)
+                    {
+                        case 1: //ASCII
+                            pValue = Testing.TestFile(sequenceLength, numberOfSequences, filePath,testBgw);
+                            break;
+                        case 2: //Binary
+                            pValue = Testing.ReadFromBinaryFile(filePath, sequenceLength);
+                            break;
+                        case 3: //Hex
+                            pValue=Testing.TestHexFile(sequenceLength, numberOfSequences, filePath, testBgw);
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 default:
                     break;
@@ -117,18 +137,31 @@ namespace RandomHeightTest
         private void TestBgw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             stopwatch.Stop();
+            progressBar1.Value = 100;
+            label5.Text = "%100";
             PvalueTbx.Text = pValue.PValue.ToString();
             if(pValue.PValue<0.01)
                 PvalueTbx.BackColor = Color.Red;
             else PvalueTbx.BackColor = Color.LightGreen;
             ResultTbx.Text=pValue.Text;
             ResultTbx.Text+= Environment.NewLine + "Time taken: " + (stopwatch.ElapsedMilliseconds / 1000.0) + "s";
-            TestButton.Enabled = true;
+            //TestButton.Enabled = true;
+            panel1.Enabled = true;
         }
         private void TestBgw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             progressBar1.Value = e.ProgressPercentage;
             label5.Text = "%" + e.ProgressPercentage;
+        }
+
+        private void FileTypeCbox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            fileType=FileTypeCbox.SelectedIndex;
+        }
+
+        private void PvalueTbx_MouseClick(object sender, MouseEventArgs e)
+        {
+            Clipboard.SetText(pValue.PValue.ToString());
         }
     }
 }

@@ -55,6 +55,80 @@ namespace RandomHeightTest
                 Text = heightTest.ResultString
             };
         }
+        static int HEX_SIZE = 4;
+        private static readonly Dictionary<char, string> hexCharacterToBinary = new Dictionary<char, string> {
+                { '0', "0000" },
+                { '1', "0001" },
+                { '2', "0010" },
+                { '3', "0011" },
+                { '4', "0100" },
+                { '5', "0101" },
+                { '6', "0110" },
+                { '7', "0111" },
+                { '8', "1000" },
+                { '9', "1001" },
+                { 'a', "1010" },
+                { 'b', "1011" },
+                { 'c', "1100" },
+                { 'd', "1101" },
+                { 'e', "1110" },
+                { 'f', "1111" },
+                { 'A', "1010" },
+                { 'B', "1011" },
+                { 'C', "1100" },
+                { 'D', "1101" },
+                { 'E', "1110" },
+                { 'F', "1111" }
+            };
+
+        public string HexStringToBinary(string hex)
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (char c in hex)
+            {
+                // This will crash for non-hex characters. You might want to handle that differently.
+                result.Append(hexCharacterToBinary[char.ToLower(c)]);
+            }
+            return result.ToString();
+        }
+
+        static string HexCharArrToString(char[] content)
+        {
+            string str = "";
+            for (int i = 0; i < content.Length; i++)
+            {
+                str += hexCharacterToBinary[content[i]];
+            }
+            return str;
+        }
+        public static Result TestHexFile(int sequenceLength, int numberOfTrials, string filePath, BackgroundWorker bgw = null)
+        {
+            StreamReader reader = new StreamReader(filePath);
+            HeightTest heightTest = new HeightTest(sequenceLength);
+            string sequence;
+            char[] buffer = new char[2];
+            reader.ReadBlock(buffer, 0, 2);
+            for (int j = 0; j < numberOfTrials; j++)
+            {
+                buffer = new char[sequenceLength/HEX_SIZE];
+                reader.ReadBlock(buffer, 0, sequenceLength / HEX_SIZE);
+                sequence = HexCharArrToString(buffer);
+                heightTest.Test(sequence);
+
+                if (bgw != null && j % (numberOfTrials / 100) == 0)
+                {
+                    bgw.ReportProgress((int)(j / (numberOfTrials / 100.0)));
+                }
+            }
+            var pVal = heightTest.Evaluate(SHOW_INFO);
+
+            Console.WriteLine("P-Value: " + pVal);
+            return new Result()
+            {
+                PValue = pVal,
+                Text = heightTest.ResultString
+            };
+        }
 
         /// <summary>
         /// Tests randomly generated sequences given the length and the number of sequences

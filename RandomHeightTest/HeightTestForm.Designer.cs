@@ -42,11 +42,14 @@
             this.testBgw = new System.ComponentModel.BackgroundWorker();
             this.SequenceLengthCbx = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.FileTypeCbox = new System.Windows.Forms.ComboBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // SelectFileButton
             // 
-            this.SelectFileButton.Location = new System.Drawing.Point(208, 3);
+            this.SelectFileButton.Location = new System.Drawing.Point(205, 0);
             this.SelectFileButton.Margin = new System.Windows.Forms.Padding(4);
             this.SelectFileButton.Name = "SelectFileButton";
             this.SelectFileButton.Size = new System.Drawing.Size(100, 28);
@@ -59,7 +62,7 @@
             // 
             this.GeneratorsCbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.GeneratorsCbx.FormattingEnabled = true;
-            this.GeneratorsCbx.Location = new System.Drawing.Point(95, 5);
+            this.GeneratorsCbx.Location = new System.Drawing.Point(92, 2);
             this.GeneratorsCbx.Margin = new System.Windows.Forms.Padding(4);
             this.GeneratorsCbx.Name = "GeneratorsCbx";
             this.GeneratorsCbx.Size = new System.Drawing.Size(100, 24);
@@ -69,7 +72,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 9);
+            this.label1.Location = new System.Drawing.Point(17, 6);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(67, 16);
@@ -78,7 +81,7 @@
             // 
             // NumberOfSequencesTbx
             // 
-            this.NumberOfSequencesTbx.Location = new System.Drawing.Point(95, 65);
+            this.NumberOfSequencesTbx.Location = new System.Drawing.Point(92, 62);
             this.NumberOfSequencesTbx.Name = "NumberOfSequencesTbx";
             this.NumberOfSequencesTbx.Size = new System.Drawing.Size(100, 22);
             this.NumberOfSequencesTbx.TabIndex = 4;
@@ -87,7 +90,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(36, 39);
+            this.label2.Location = new System.Drawing.Point(33, 36);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(51, 16);
@@ -97,7 +100,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 68);
+            this.label3.Location = new System.Drawing.Point(1, 65);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(83, 16);
@@ -106,7 +109,7 @@
             // 
             // TestButton
             // 
-            this.TestButton.Location = new System.Drawing.Point(208, 62);
+            this.TestButton.Location = new System.Drawing.Point(205, 59);
             this.TestButton.Margin = new System.Windows.Forms.Padding(4);
             this.TestButton.Name = "TestButton";
             this.TestButton.Size = new System.Drawing.Size(100, 28);
@@ -148,6 +151,7 @@
             this.PvalueTbx.ReadOnly = true;
             this.PvalueTbx.Size = new System.Drawing.Size(100, 22);
             this.PvalueTbx.TabIndex = 12;
+            this.PvalueTbx.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PvalueTbx_MouseClick);
             // 
             // testBgw
             // 
@@ -160,7 +164,7 @@
             // 
             this.SequenceLengthCbx.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.SequenceLengthCbx.FormattingEnabled = true;
-            this.SequenceLengthCbx.Location = new System.Drawing.Point(95, 35);
+            this.SequenceLengthCbx.Location = new System.Drawing.Point(92, 32);
             this.SequenceLengthCbx.Margin = new System.Windows.Forms.Padding(4);
             this.SequenceLengthCbx.Name = "SequenceLengthCbx";
             this.SequenceLengthCbx.Size = new System.Drawing.Size(100, 24);
@@ -175,30 +179,51 @@
             this.label5.TabIndex = 14;
             this.label5.Text = "label5";
             // 
+            // FileTypeCbox
+            // 
+            this.FileTypeCbox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.FileTypeCbox.FormattingEnabled = true;
+            this.FileTypeCbox.Location = new System.Drawing.Point(205, 32);
+            this.FileTypeCbox.Name = "FileTypeCbox";
+            this.FileTypeCbox.Size = new System.Drawing.Size(100, 24);
+            this.FileTypeCbox.TabIndex = 15;
+            this.FileTypeCbox.SelectedIndexChanged += new System.EventHandler(this.FileTypeCbox_SelectedIndexChanged);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.FileTypeCbox);
+            this.panel1.Controls.Add(this.SelectFileButton);
+            this.panel1.Controls.Add(this.GeneratorsCbx);
+            this.panel1.Controls.Add(this.SequenceLengthCbx);
+            this.panel1.Controls.Add(this.NumberOfSequencesTbx);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.TestButton);
+            this.panel1.Location = new System.Drawing.Point(3, 4);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(316, 89);
+            this.panel1.TabIndex = 16;
+            // 
             // HeightTestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(315, 457);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.SequenceLengthCbx);
             this.Controls.Add(this.PvalueTbx);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.ResultTbx);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.TestButton);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.NumberOfSequencesTbx);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.GeneratorsCbx);
-            this.Controls.Add(this.SelectFileButton);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "HeightTestForm";
             this.Text = "HeightTestForm";
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -220,5 +245,7 @@
         private System.ComponentModel.BackgroundWorker testBgw;
         private System.Windows.Forms.ComboBox SequenceLengthCbx;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox FileTypeCbox;
+        private System.Windows.Forms.Panel panel1;
     }
 }
