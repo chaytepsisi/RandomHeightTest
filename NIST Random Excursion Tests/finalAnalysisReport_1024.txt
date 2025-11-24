@@ -1,0 +1,42 @@
+------------------------------------------------------------------------------
+RESULTS FOR THE UNIFORMITY OF P-VALUES AND THE PROPORTION OF PASSING SEQUENCES
+------------------------------------------------------------------------------
+   generator is <1024.txt>
+------------------------------------------------------------------------------
+ C1  C2  C3  C4  C5  C6  C7  C8  C9 C10  P-VALUE  PROPORTION  STATISTICAL TEST
+------------------------------------------------------------------------------
+ 58  59  68  67  56  71  66  81  62  63  0.589182    644/651     RandomExcursions
+ 69  57  62  67  61  71  61  85  54  64  0.310967    643/651     RandomExcursions
+ 71  63  65  56  64  69  67  71  65  60  0.959215    638/651     RandomExcursions
+ 65  75  73  68  55  57  68  70  58  62  0.678686    647/651     RandomExcursions
+ 64  73  63  69  65  73  61  61  55  67  0.884326    644/651     RandomExcursions
+ 68  75  62  60  57  60  66  77  67  59  0.697732    645/651     RandomExcursions
+ 72  66  61  62  79  71  64  66  56  54  0.548158    646/651     RandomExcursions
+ 66  75  57  57  79  68  67  77  52  53  0.130774    642/651     RandomExcursions
+ 51  56  74  68  60  75  59  72  64  72  0.379883    645/651     RandomExcursionsVariant
+ 57  55  70  80  60  65  59  71  73  61  0.428797    648/651     RandomExcursionsVariant
+ 54  61  78  72  62  56  67  71  63  67  0.576486    644/651     RandomExcursionsVariant
+ 60  65  62  67  72  68  58  65  72  62  0.959215    646/651     RandomExcursionsVariant
+ 68  67  62  61  55  73  64  72  67  62  0.906277    648/651     RandomExcursionsVariant
+ 74  52  61  75  56  67  69  68  59  70  0.508020    649/651     RandomExcursionsVariant
+ 67  57  71  55  65  65  66  64  73  68  0.891142    646/651     RandomExcursionsVariant
+ 65  67  58  58  68  65  66  65  72  67  0.979831    647/651     RandomExcursionsVariant
+ 59  73  72  71  63  57  81  62  55  58  0.329730    647/651     RandomExcursionsVariant
+ 70  69  53  85  63  60  71  60  57  63  0.247333    645/651     RandomExcursionsVariant
+ 70  66  61  67  66  59  63  71  63  65  0.992177    640/651     RandomExcursionsVariant
+ 63  78  66  66  45  78  54  67  70  64  0.130774    642/651     RandomExcursionsVariant
+ 65  79  63  69  71  48  71  69  58  58  0.301869    648/651     RandomExcursionsVariant
+ 60  71  79  74  65  68  45  56  72  61  0.131938    647/651     RandomExcursionsVariant
+ 58  73  75  60  68  66  74  48  61  68  0.359274    649/651     RandomExcursionsVariant
+ 56  68  68  84  68  56  59  63  64  65  0.428797    648/651     RandomExcursionsVariant
+ 59  68  70  77  65  64  60  65  58  65  0.879676    646/651     RandomExcursionsVariant
+ 58  71  62  65  86  74  49  71  56  59  0.071860    648/651     RandomExcursionsVariant
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+The minimum pass rate for the random excursion (variant) test
+is approximately = 636 for a sample size = 651 binary sequences.
+
+For further guidelines construct a probability table using the MAPLE program
+provided in the addendum section of the documentation.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
