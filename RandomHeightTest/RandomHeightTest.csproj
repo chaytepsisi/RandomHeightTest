@@ -67,6 +67,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Constants\E 132877206 Hexadecimal Digits.zip" />
+    <None Include="Constants\Pi 132877206 Hexadecimal Digits.zip" />
+    <None Include="Constants\sqrt%282%29 132877206 Hexadecimal Digits.zip" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HeightTestForm.resx">
